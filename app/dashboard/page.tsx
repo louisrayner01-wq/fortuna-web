@@ -1,6 +1,7 @@
 "use client"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import { getMe, getTradeSummary, getTrades, startBot, stopBot, updateCapital, logout } from "@/lib/api"
 
 export default function Dashboard() {
@@ -82,9 +83,12 @@ export default function Dashboard() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold text-white">Fortuna</h1>
-        <button onClick={handleLogout} className="text-gray-400 text-sm hover:text-white">
-          Sign out
-        </button>
+        <div className="flex items-center gap-4">
+          <Link href="/settings" className="text-gray-400 text-sm hover:text-white">Settings</Link>
+          <button onClick={handleLogout} className="text-gray-400 text-sm hover:text-white">
+            Sign out
+          </button>
+        </div>
       </div>
 
       {/* Bot status card */}
