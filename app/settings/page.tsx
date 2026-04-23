@@ -204,7 +204,7 @@ export default function Settings() {
           {[
             ["Position sizing",   "% of capital per trade, adjusted by day of week"],
             ["Stop loss",         "ATR-based, calibrated from 2,000+ backtested trades"],
-            ["Take profit",       "Multi-TP — partial close at 1:1, remainder runs to target"],
+            ["Take profit",       "Full position closed at target — no partial closes"],
             ["Daily loss limit",  "10% of equity — bot pauses for the day if hit"],
             ["Max positions",     "5 open at once across BTC, ETH, SOL"],
           ].map(([label, value]) => (
