@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { getAdminStats, getAdminUsers, grantAccess, revokeAccess } from "@/lib/api"
+import { getAdminStats, getAdminUsers, grantAccess, revokeAccess, grantAccessByEmail } from "@/lib/api"
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -11,6 +11,9 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError]   = useState("")
   const [actionUserId, setActionUserId] = useState("")
+  const [inviteEmail, setInviteEmail]   = useState("")
+  const [inviteMsg, setInviteMsg]       = useState("")
+  const [inviteLoading, setInviteLoading] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem("token")
@@ -31,6 +34,22 @@ export default function AdminDashboard() {
       }
     } finally {
       setLoading(false)
+    }
+  }
+
+  async function handleInvite(e: React.FormEvent) {
+    e.preventDefault()
+    setInviteMsg("")
+    setInviteLoading(true)
+    try {
+      await grantAccessByEmail(inviteEmail)
+      setInviteMsg(`✓ Access granted to ${inviteEmail}`)
+      setInviteEmail("")
+      await loadData()
+    } catch (err: any) {
+      setInviteMsg(err.message)
+    } finally {
+      setInviteLoading(false)
     }
   }
 
@@ -98,6 +117,30 @@ export default function AdminDashboard() {
             <p className={`text-xl font-bold ${s.color ?? "text-white"}`}>{s.value}</p>
           </div>
         ))}
+      </div>
+
+      {/* Grant free access by email */}
+      <div className="bg-white/5 rounded-2xl p-4 mb-6">
+        <p className="text-white font-semibold mb-1">Grant Free Access</p>
+        <p className="text-gray-400 text-sm mb-4">
+          The user must have already created an account before you can grant access.
+        </p>
+        <form onSubmit={handleInvite} className="flex gap-2">
+          <input
+            type="email" placeholder="user@email.com" required
+            value={inviteEmail} onChange={e => setInviteEmail(e.target.value)}
+            className="flex-1 bg-white/10 text-white placeholder-gray-500 rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-brand text-sm"
+          />
+          <button type="submit" disabled={inviteLoading}
+            className="bg-brand hover:bg-brand-dark text-white font-semibold px-5 py-2 rounded-xl text-sm transition disabled:opacity-50">
+            {inviteLoading ? "..." : "Grant"}
+          </button>
+        </form>
+        {inviteMsg && (
+          <p className={`text-sm mt-2 ${inviteMsg.startsWith("✓") ? "text-green-400" : "text-red-400"}`}>
+            {inviteMsg}
+          </p>
+        )}
       </div>
 
       {/* Users table */}

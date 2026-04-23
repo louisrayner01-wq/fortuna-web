@@ -111,6 +111,13 @@ export async function grantAccess(user_id: string) {
   return request(`/api/admin/users/${user_id}/grant-access`, { method: "POST" })
 }
 
+export async function grantAccessByEmail(email: string) {
+  return request("/api/admin/grant-by-email", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  })
+}
+
 export async function revokeAccess(user_id: string) {
   return request(`/api/admin/users/${user_id}/revoke-access`, { method: "POST" })
 }
