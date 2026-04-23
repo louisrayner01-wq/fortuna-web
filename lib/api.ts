@@ -96,3 +96,21 @@ export async function getTrades() {
 export async function getTradeSummary() {
   return request("/api/trades/summary")
 }
+
+// ── Admin ─────────────────────────────────────────────────────────────────────
+
+export async function getAdminStats() {
+  return request("/api/admin/stats")
+}
+
+export async function getAdminUsers() {
+  return request("/api/admin/users")
+}
+
+export async function grantAccess(user_id: string) {
+  return request(`/api/admin/users/${user_id}/grant-access`, { method: "POST" })
+}
+
+export async function revokeAccess(user_id: string) {
+  return request(`/api/admin/users/${user_id}/revoke-access`, { method: "POST" })
+}
