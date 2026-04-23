@@ -1,0 +1,18 @@
+{
+  "name": "Fortuna Trading Bot",
+  "short_name": "Fortuna",
+  "description": "Automated trading bot for WEEX exchange",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#0f0f0f",
+  "theme_color": "#6366f1",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
