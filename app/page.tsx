@@ -1,11 +1,12 @@
 "use client"
 import Link from "next/link"
+import Image from "next/image"
 
 export default function Landing() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
       <div className="mb-8">
-        <h1 className="text-5xl font-bold text-white mb-2">Fortuna</h1>
+        <Image src="/logo.svg" alt="Fortuna" width={120} height={125} className="mx-auto mb-4" />
         <p className="text-gray-400 text-lg">Automated trading bot for WEEX exchange</p>
       </div>
 

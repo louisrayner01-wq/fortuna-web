@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 520" width="500" height="520">
+  <defs>
+    <linearGradient id="bg13" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#000000"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </linearGradient>
+    <linearGradient id="gold13" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFE566"/>
+      <stop offset="100%" stop-color="#B8860B"/>
+    </linearGradient>
+    <linearGradient id="wingGL13" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFE566"/>
+      <stop offset="100%" stop-color="#7A5500"/>
+    </linearGradient>
+    <linearGradient id="wingGR13" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE566"/>
+      <stop offset="100%" stop-color="#7A5500"/>
+    </linearGradient>
+    <filter id="glow13">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Solid dark background -->
+  <rect width="500" height="520" fill="url(#bg13)"/>
+
+  <!-- Hexagon frame -->
+  <polygon points="250,6 425,107 425,309 250,410 75,309 75,107"
+           fill="url(#bg13)" stroke="url(#gold13)" stroke-width="11" stroke-linejoin="round"
+           filter="url(#glow13)"/>
+  <polygon points="250,32 404,122 404,294 250,384 96,294 96,122"
+           fill="none" stroke="#FFD700" stroke-width="2.5" opacity="0.3"/>
+
+  <!-- LEFT WING -->
+  <polygon points="168,205  101,92  156,211" fill="url(#wingGL13)" opacity="1.00"/>
+  <polygon points="167,203  75,135  158,213"  fill="url(#wingGL13)" opacity="0.87"/>
+  <polygon points="164,201  75,176  160,215"  fill="url(#wingGL13)" opacity="0.74"/>
+  <polygon points="162,201  75,208  162,215"  fill="url(#wingGL13)" opacity="0.62"/>
+  <polygon points="165,215  75,243  159,202"  fill="url(#wingGL13)" opacity="0.50"/>
+  <polygon points="167,213  75,286  157,203"  fill="url(#wingGL13)" opacity="0.38"/>
+  <g stroke="#000000" stroke-width="1.8" opacity="0.65">
+    <line x1="162" y1="208" x2="101" y2="92"/>
+    <line x1="162" y1="208" x2="75"  y2="135"/>
+    <line x1="162" y1="208" x2="75"  y2="176"/>
+    <line x1="162" y1="208" x2="75"  y2="208"/>
+    <line x1="162" y1="208" x2="75"  y2="243"/>
+    <line x1="162" y1="208" x2="75"  y2="286"/>
+  </g>
+  <path d="M 101,92 L 75,107 L 75,286"
+        fill="none" stroke="url(#wingGL13)" stroke-width="3" stroke-linejoin="round" opacity="0.55"/>
+
+  <!-- RIGHT WING -->
+  <polygon points="332,205  399,92  344,211" fill="url(#wingGR13)" opacity="1.00"/>
+  <polygon points="333,203  425,135  342,213" fill="url(#wingGR13)" opacity="0.87"/>
+  <polygon points="336,201  425,176  340,215" fill="url(#wingGR13)" opacity="0.74"/>
+  <polygon points="338,201  425,208  338,215" fill="url(#wingGR13)" opacity="0.62"/>
+  <polygon points="335,215  425,243  341,202" fill="url(#wingGR13)" opacity="0.50"/>
+  <polygon points="333,213  425,286  343,203" fill="url(#wingGR13)" opacity="0.38"/>
+  <g stroke="#000000" stroke-width="1.8" opacity="0.65">
+    <line x1="338" y1="208" x2="399" y2="92"/>
+    <line x1="338" y1="208" x2="425" y2="135"/>
+    <line x1="338" y1="208" x2="425" y2="176"/>
+    <line x1="338" y1="208" x2="425" y2="208"/>
+    <line x1="338" y1="208" x2="425" y2="243"/>
+    <line x1="338" y1="208" x2="425" y2="286"/>
+  </g>
+  <path d="M 399,92 L 425,107 L 425,286"
+        fill="none" stroke="url(#wingGR13)" stroke-width="3" stroke-linejoin="round" opacity="0.55"/>
+
+  <!-- WHEEL OF FORTUNE -->
+  <circle cx="250" cy="208" r="90" fill="#000000" stroke="url(#gold13)" stroke-width="8" filter="url(#glow13)"/>
+  <circle cx="250" cy="208" r="59" fill="none" stroke="url(#gold13)" stroke-width="3.5"/>
+  <g stroke="#FFD700" stroke-width="4.5" stroke-linecap="round">
+    <line x1="250" y1="118" x2="250" y2="298"/>
+    <line x1="160" y1="208" x2="340" y2="208"/>
+    <line x1="186" y1="144" x2="314" y2="272"/>
+    <line x1="314" y1="144" x2="186" y2="272"/>
+  </g>
+  <circle cx="250" cy="208" r="22" fill="url(#gold13)"/>
+  <circle cx="250" cy="208" r="12" fill="#000000"/>
+  <circle cx="250" cy="208" r="5"  fill="#FFD700"/>
+  <polygon points="250,109 244,118 250,127 256,118" fill="#FFD700"/>
+  <polygon points="250,289 244,298 250,307 256,298" fill="#FFD700"/>
+  <polygon points="151,202 160,208 151,214 160,208" fill="#FFD700"/>
+  <polygon points="340,202 349,208 340,214 349,208" fill="#FFD700"/>
+
+  <!-- FORTUNA -->
+  <line x1="80"  y1="437" x2="420" y2="437" stroke="#FFD700" stroke-width="1" opacity="0.3"/>
+  <text x="250" y="470" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="52" font-weight="bold" fill="url(#gold13)" letter-spacing="9">FORTUNA</text>
+  <line x1="80"  y1="480" x2="420" y2="480" stroke="#FFD700" stroke-width="1" opacity="0.3"/>
+  <text x="250" y="500" text-anchor="middle"
+        font-family="Arial, sans-serif"
+        font-size="12" fill="#FFD700" letter-spacing="6" opacity="0.55">TRADING BOT</text>
+</svg>

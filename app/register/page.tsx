@@ -2,6 +2,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
 import { register } from "@/lib/api"
 
 export default function Register() {
@@ -28,6 +29,7 @@ export default function Register() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-6">
       <div className="w-full max-w-sm">
+        <Image src="/logo.svg" alt="Fortuna" width={72} height={75} className="mb-4" />
         <h1 className="text-3xl font-bold text-white mb-2">Create account</h1>
         <p className="text-gray-400 mb-8">Start trading with Fortuna</p>
 

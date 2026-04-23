@@ -2,6 +2,7 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
+import Image from "next/image"
 import { login } from "@/lib/api"
 
 export default function Login() {
@@ -28,6 +29,7 @@ export default function Login() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-6">
       <div className="w-full max-w-sm">
+        <Image src="/logo.svg" alt="Fortuna" width={72} height={75} className="mb-4" />
         <h1 className="text-3xl font-bold text-white mb-2">Welcome back</h1>
         <p className="text-gray-400 mb-8">Sign in to your account</p>
 
