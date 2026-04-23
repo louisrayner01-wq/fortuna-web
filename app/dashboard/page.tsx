@@ -14,10 +14,12 @@ export default function Dashboard() {
   const [loading, setLoading]   = useState(true)
   const [toggling, setToggling] = useState(false)
   const [error, setError]       = useState("")
+  const [showWelcome, setShowWelcome] = useState(false)
 
   useEffect(() => {
     const token = localStorage.getItem("token")
     if (!token) { router.push("/login"); return }
+    if (!localStorage.getItem("welcome_dismissed")) setShowWelcome(true)
     loadData()
   }, [])
 
@@ -67,6 +69,11 @@ export default function Dashboard() {
     router.push("/")
   }
 
+  function dismissWelcome() {
+    localStorage.setItem("welcome_dismissed", "1")
+    setShowWelcome(false)
+  }
+
   if (loading) {
     return (
       <main className="min-h-screen flex items-center justify-center">
@@ -94,6 +101,40 @@ export default function Dashboard() {
           </button>
         </div>
       </div>
+
+      {/* Welcome message — shown once, dismissed to localStorage */}
+      {showWelcome && (
+        <div className="rounded-2xl p-5 mb-6 border border-yellow-500/30 bg-yellow-500/5">
+          <div className="flex items-start justify-between gap-4 mb-4">
+            <div>
+              <h2 className="text-white font-bold text-lg">Welcome to Fortuna</h2>
+              <p className="text-gray-400 text-sm mt-1">A few things to know before you start.</p>
+            </div>
+            <button onClick={dismissWelcome} className="text-gray-500 hover:text-white text-xl leading-none mt-0.5">×</button>
+          </div>
+          <ul className="flex flex-col gap-3 mb-5">
+            {[
+              ["Trading is a long-term game", "Short-term losses are normal. The edge is statistical — it needs volume to play out. Give the bot at least 30 trades before judging performance."],
+              ["Compound your account", "If you want to take profits, only withdraw a maximum of 50% of your monthly gains. Leaving the rest in accelerates compounding over time."],
+              ["Default risk per trade is 5%", "This is set to 5% of your account per trade by default. You can adjust this, but avoid going above 5% — higher risk leads to faster drawdowns."],
+              ["Never withdraw your starting capital", "Only take money from profits, not your base capital. Withdrawing capital reduces your position sizes and slows recovery from drawdowns."],
+              ["Let the bot run consistently", "Don't stop and start based on short-term results. Turning the bot off during a losing streak means missing the trades that recover it."],
+            ].map(([title, body]) => (
+              <li key={title} className="flex gap-3">
+                <span className="text-yellow-500 mt-0.5 shrink-0">›</span>
+                <span className="text-sm text-gray-300"><span className="text-white font-semibold">{title} — </span>{body}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="text-gray-500 text-xs border-t border-white/10 pt-3">
+            This is not financial advice. Trading involves risk and you may lose money. Only trade with capital you can afford to lose.
+          </p>
+          <button onClick={dismissWelcome}
+            className="mt-4 w-full bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 font-semibold py-2.5 rounded-xl text-sm transition">
+            Got it, let's go
+          </button>
+        </div>
+      )}
 
       {/* Bot status card */}
       <div className={`rounded-2xl p-6 mb-4 ${isActive ? "bg-green-500/10 border border-green-500/30" : "bg-white/5"}`}>
