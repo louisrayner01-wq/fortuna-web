@@ -85,6 +85,9 @@ export default function Dashboard() {
       <div className="flex items-center justify-between mb-8">
         <Image src="/logo.svg" alt="Fortuna" width={48} height={50} />
         <div className="flex items-center gap-4">
+          <Link href="/pnl" className="text-sm font-semibold bg-white/10 hover:bg-white/15 text-white px-3 py-1.5 rounded-lg transition">
+            P&amp;L
+          </Link>
           <Link href="/settings" className="text-gray-400 text-sm hover:text-white">Settings</Link>
           <button onClick={handleLogout} className="text-gray-400 text-sm hover:text-white">
             Sign out

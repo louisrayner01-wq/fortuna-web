@@ -97,6 +97,10 @@ export async function getTradeSummary() {
   return request("/api/trades/summary")
 }
 
+export async function getPnlChart() {
+  return request("/api/trades/pnl-chart")
+}
+
 // ── Admin ─────────────────────────────────────────────────────────────────────
 
 export async function getAdminStats() {
