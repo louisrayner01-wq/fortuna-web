@@ -114,11 +114,10 @@ export default function Dashboard() {
           </div>
           <ul className="flex flex-col gap-3 mb-5">
             {[
-              ["Trading is a long-term game", "Short-term losses are normal. The edge is statistical — it needs volume to play out. Give the bot at least 30 trades before judging performance."],
-              ["Compound your account", "If you want to take profits, only withdraw a maximum of 50% of your monthly gains. Leaving the rest in accelerates compounding over time."],
-              ["Default risk per trade is 5%", "This is set to 5% of your account per trade by default. You can adjust this, but avoid going above 5% — higher risk leads to faster drawdowns."],
-              ["Never withdraw your starting capital", "Only take money from profits, not your base capital. Withdrawing capital reduces your position sizes and slows recovery from drawdowns."],
-              ["Let the bot run consistently", "Don't stop and start based on short-term results. Turning the bot off during a losing streak means missing the trades that recover it."],
+              ["Trading is a long-term game", "Short-term variance is completely normal. The edge is statistical and needs volume to play out — we recommend giving it at least 30 trades before drawing any conclusions."],
+              ["Compounding makes a big difference", "If you do take profits, consider leaving at least 50% of your monthly gains in the account. Compounding your returns over time is where the real growth happens."],
+              ["Default risk per trade is 5%", "Risk is set to 5% of your account per trade by default. You can adjust this in settings, but we recommend keeping it at 5% or below."],
+              ["Let the bot run consistently", "Try to keep the bot running through both good and bad periods. Stopping during a drawdown and missing the recovery is one of the most common mistakes in algo trading."],
             ].map(([title, body]) => (
               <li key={title} className="flex gap-3">
                 <span className="text-yellow-500 mt-0.5 shrink-0">›</span>
