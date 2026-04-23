@@ -22,12 +22,9 @@
     </filter>
   </defs>
 
-  <!-- Solid dark background -->
-  <rect width="500" height="520" fill="url(#bg13)"/>
-
   <!-- Hexagon frame -->
   <polygon points="250,6 425,107 425,309 250,410 75,309 75,107"
-           fill="url(#bg13)" stroke="url(#gold13)" stroke-width="11" stroke-linejoin="round"
+           fill="transparent" stroke="url(#gold13)" stroke-width="11" stroke-linejoin="round"
            filter="url(#glow13)"/>
   <polygon points="250,32 404,122 404,294 250,384 96,294 96,122"
            fill="none" stroke="#FFD700" stroke-width="2.5" opacity="0.3"/>
