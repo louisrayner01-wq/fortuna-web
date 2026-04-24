@@ -43,12 +43,15 @@ function StatPill({ label, value, color }: { label: string; value: string; color
 export default function PnlPage() {
   const router = useRouter()
   const [loading, setLoading]     = useState(true)
-  const [capital, setCapital]     = useState<number>(100)
+  const [botCapital, setBotCapital] = useState<number>(100)   // actual configured capital
+  const [viewCapital, setViewCapital] = useState<number | null>(null)  // simulated capital
   const [daily, setDaily]         = useState<DayRow[]>([])
   const [weekly, setWeekly]       = useState<WeekRow[]>([])
   const [monthly, setMonthly]     = useState<MonthRow[]>([])
   const [equity, setEquity]       = useState<EquityRow[]>([])
   const [monthIdx, setMonthIdx]   = useState(0)   // which month to show in daily chart
+
+  const PRESETS = [100, 500, 1000, 5000, 10000]
 
   useEffect(() => {
     const token = localStorage.getItem("token")
@@ -63,7 +66,7 @@ export default function PnlPage() {
       setWeekly((chart.weekly  ?? []).slice(-12))
       setMonthly((chart.monthly ?? []).slice(-12))
       setEquity(chart.equity_series ?? [])
-      setCapital(me.bot?.capital ?? 100)
+      setBotCapital(me.bot?.capital ?? 100)
     } catch {
       router.push("/login")
     } finally {
@@ -71,10 +74,26 @@ export default function PnlPage() {
     }
   }
 
+  const simCap = viewCapital ?? botCapital
+  const scale  = botCapital > 0 ? simCap / botCapital : 1
+
+  // Scale helpers
+  const scaleRow = (row: DayRow): DayRow => ({ ...row, pnl: row.pnl * scale })
+  const scaleWeek = (row: WeekRow): WeekRow => ({ ...row, pnl: row.pnl * scale })
+  const scaleMonth = (row: MonthRow): MonthRow => ({ ...row, pnl: row.pnl * scale })
+  const scaleEquity = (row: EquityRow): EquityRow => ({
+    ...row,
+    // equity_after = botCapital + cumulative_pnl → scale the profit portion
+    equity: simCap + (row.equity - botCapital) * scale,
+  })
+
   // All months present in daily data
   const months = Array.from(new Set(daily.map(d => d.date.slice(0, 7)))).sort()
   const currentMonth = months[months.length - 1 - monthIdx] ?? ""
-  const monthDays = daily.filter(d => d.date.startsWith(currentMonth))
+  const monthDays = daily.filter(d => d.date.startsWith(currentMonth)).map(scaleRow)
+  const scaledWeekly  = weekly.map(scaleWeek)
+  const scaledMonthly = monthly.map(scaleMonth)
+  const scaledEquity  = equity.map(scaleEquity)
 
   // Monthly summary stats
   const monthPnl    = monthDays.reduce((s, d) => s + d.pnl, 0)
@@ -82,8 +101,7 @@ export default function PnlPage() {
   const greenDays   = monthDays.filter(d => d.pnl > 0).length
   const redDays     = monthDays.filter(d => d.pnl < 0).length
 
-  // Weekly stats for current week
-  const totalPnl   = monthly.reduce((s, m) => s + m.pnl, 0)
+  const totalPnl = scaledMonthly.reduce((s, m) => s + m.pnl, 0)
 
   if (loading) {
     return (
@@ -105,6 +123,32 @@ export default function PnlPage() {
       </div>
 
       <h1 className="text-2xl font-bold text-white mb-6">Performance</h1>
+
+      {/* Account size simulator */}
+      <div className="bg-white/5 rounded-2xl p-4 mb-6">
+        <p className="text-gray-400 text-xs mb-2">Simulate account size</p>
+        <div className="flex flex-wrap gap-2">
+          {PRESETS.map(p => (
+            <button
+              key={p}
+              onClick={() => setViewCapital(p === botCapital ? null : p)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+                simCap === p
+                  ? "bg-brand text-white"
+                  : "bg-white/10 text-gray-300 hover:bg-white/15"
+              }`}
+            >
+              ${p >= 1000 ? `${p / 1000}k` : p}
+            </button>
+          ))}
+        </div>
+        {viewCapital && viewCapital !== botCapital && (
+          <p className="text-gray-500 text-xs mt-2">
+            Showing P&amp;L scaled to a ${viewCapital.toLocaleString()} account
+            (actual capital: ${botCapital.toLocaleString()})
+          </p>
+        )}
+      </div>
 
       {/* All-time summary pills */}
       <div className="grid grid-cols-3 gap-3 mb-8">
@@ -203,7 +247,7 @@ export default function PnlPage() {
           <p className="text-gray-500 text-sm text-center py-8">No data yet</p>
         ) : (
           <ResponsiveContainer width="100%" height={160}>
-            <BarChart data={weekly} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+            <BarChart data={scaledWeekly} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#2d3148" vertical={false} />
               <XAxis
                 dataKey="week"
@@ -222,7 +266,7 @@ export default function PnlPage() {
               />
               <ReferenceLine y={0} stroke="#4a5568" />
               <Bar dataKey="pnl" radius={[3, 3, 0, 0]}>
-                {weekly.map((w, i) => (
+                {scaledWeekly.map((w, i) => (
                   <Cell key={i} fill={pnlColor(w.pnl)} />
                 ))}
               </Bar>
@@ -238,7 +282,7 @@ export default function PnlPage() {
           <p className="text-gray-500 text-sm text-center py-8">No data yet</p>
         ) : (
           <ResponsiveContainer width="100%" height={160}>
-            <BarChart data={monthly} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
+            <BarChart data={scaledMonthly} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#2d3148" vertical={false} />
               <XAxis
                 dataKey="month"
@@ -263,7 +307,7 @@ export default function PnlPage() {
               />
               <ReferenceLine y={0} stroke="#4a5568" />
               <Bar dataKey="pnl" radius={[3, 3, 0, 0]}>
-                {monthly.map((m, i) => (
+                {scaledMonthly.map((m, i) => (
                   <Cell key={i} fill={pnlColor(m.pnl)} />
                 ))}
               </Bar>
@@ -280,7 +324,7 @@ export default function PnlPage() {
         ) : (
           <ResponsiveContainer width="100%" height={180}>
             <LineChart
-              data={equity}
+              data={scaledEquity}
               margin={{ top: 4, right: 4, left: -20, bottom: 0 }}
             >
               <CartesianGrid strokeDasharray="3 3" stroke="#2d3148" vertical={false} />
@@ -300,7 +344,7 @@ export default function PnlPage() {
                 {...TOOLTIP_STYLE}
                 formatter={(v: any) => [`$${Number(v).toFixed(2)}`, "Equity"]}
               />
-              <ReferenceLine y={capital} stroke="#4a5568" strokeDasharray="4 2" label={{ value: "Start", fill: "#4a5568", fontSize: 10 }} />
+              <ReferenceLine y={simCap} stroke="#4a5568" strokeDasharray="4 2" label={{ value: "Start", fill: "#4a5568", fontSize: 10 }} />
               <Line
                 type="monotone"
                 dataKey="equity"

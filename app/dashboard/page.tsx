@@ -11,6 +11,8 @@ export default function Dashboard() {
   const [summary, setSummary]   = useState<any>(null)
   const [trades, setTrades]     = useState<any[]>([])
   const [capital, setCapital]   = useState("")
+  const [botCapital, setBotCapital] = useState(100)   // actual configured capital
+  const [viewCapital, setViewCapital] = useState<number | null>(null)  // simulated capital
   const [loading, setLoading]   = useState(true)
   const [toggling, setToggling] = useState(false)
   const [error, setError]       = useState("")
@@ -29,7 +31,9 @@ export default function Dashboard() {
       setUser(me)
       setSummary(sum)
       setTrades(tr)
-      setCapital(me.bot?.capital?.toString() || "")
+      const cap = me.bot?.capital ?? 100
+      setCapital(cap.toString())
+      setBotCapital(cap)
     } catch {
       router.push("/login")
     } finally {
@@ -82,8 +86,12 @@ export default function Dashboard() {
     )
   }
 
-  const isActive = user?.bot?.is_active
-  const pnl      = summary?.total_pnl ?? 0
+  const isActive  = user?.bot?.is_active
+  const simCap    = viewCapital ?? botCapital
+  const scale     = botCapital > 0 ? simCap / botCapital : 1
+  const pnl       = (summary?.total_pnl ?? 0) * scale
+
+  const PRESETS = [100, 500, 1000, 5000, 10000]
 
   return (
     <main className="min-h-screen px-4 py-8 max-w-lg mx-auto">
@@ -100,6 +108,32 @@ export default function Dashboard() {
             Sign out
           </button>
         </div>
+      </div>
+
+      {/* Account size simulator */}
+      <div className="bg-white/5 rounded-2xl p-4 mb-4">
+        <p className="text-gray-400 text-xs mb-2">Simulate account size</p>
+        <div className="flex flex-wrap gap-2">
+          {PRESETS.map(p => (
+            <button
+              key={p}
+              onClick={() => setViewCapital(p === botCapital ? null : p)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
+                simCap === p
+                  ? "bg-brand text-white"
+                  : "bg-white/10 text-gray-300 hover:bg-white/15"
+              }`}
+            >
+              ${p >= 1000 ? `${p / 1000}k` : p}
+            </button>
+          ))}
+        </div>
+        {viewCapital && viewCapital !== botCapital && (
+          <p className="text-gray-500 text-xs mt-2">
+            Showing P&amp;L scaled to a ${viewCapital.toLocaleString()} account
+            (actual capital: ${botCapital.toLocaleString()})
+          </p>
+        )}
       </div>
 
       {/* Welcome message — shown once, dismissed to localStorage */}
@@ -221,7 +255,7 @@ export default function Dashboard() {
                   <p className="text-gray-400 text-xs capitalize">{t.side} · {t.exit_reason}</p>
                 </div>
                 <p className={`font-semibold text-sm ${(t.pnl_usdt ?? 0) >= 0 ? "text-green-400" : "text-red-400"}`}>
-                  {(t.pnl_usdt ?? 0) >= 0 ? "+" : ""}${(t.pnl_usdt ?? 0).toFixed(2)}
+                  {(t.pnl_usdt ?? 0) >= 0 ? "+" : ""}${((t.pnl_usdt ?? 0) * scale).toFixed(2)}
                 </p>
               </div>
             ))}
