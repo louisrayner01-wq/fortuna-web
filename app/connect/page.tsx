@@ -1,7 +1,7 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { connectExchange } from "@/lib/api"
+import { connectExchange, getPaymentStatus } from "@/lib/api"
 
 export default function Connect() {
   const router = useRouter()
@@ -10,6 +10,19 @@ export default function Connect() {
   const [passphrase, setPassphrase] = useState("")
   const [error, setError]           = useState("")
   const [loading, setLoading]       = useState(false)
+  const [checking, setChecking]     = useState(true)
+
+  useEffect(() => {
+    getPaymentStatus()
+      .then((s: any) => {
+        if (s.status !== "active" && s.status !== "trialing") {
+          router.replace("/subscribe")
+        } else {
+          setChecking(false)
+        }
+      })
+      .catch(() => router.replace("/login"))
+  }, [router])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -24,6 +37,8 @@ export default function Connect() {
       setLoading(false)
     }
   }
+
+  if (checking) return null
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-6">

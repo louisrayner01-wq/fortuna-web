@@ -22,10 +22,10 @@ async function request(path: string, options: RequestInit = {}) {
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
 
-export async function register(email: string, password: string, ref_code?: string) {
+export async function register(name: string, email: string, password: string, ref_code?: string) {
   const data = await request("/api/users/register", {
     method: "POST",
-    body: JSON.stringify({ email, password, ref_code: ref_code || "" }),
+    body: JSON.stringify({ name, email, password, ref_code: ref_code || "" }),
   })
   localStorage.setItem("token", data.token)
   localStorage.setItem("user_id", data.user_id)
