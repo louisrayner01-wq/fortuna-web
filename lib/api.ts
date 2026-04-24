@@ -22,10 +22,10 @@ async function request(path: string, options: RequestInit = {}) {
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
 
-export async function register(email: string, password: string) {
+export async function register(email: string, password: string, ref_code?: string) {
   const data = await request("/api/users/register", {
     method: "POST",
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({ email, password, ref_code: ref_code || "" }),
   })
   localStorage.setItem("token", data.token)
   localStorage.setItem("user_id", data.user_id)
@@ -114,6 +114,63 @@ export async function getBillingPortal() {
 export async function getPaymentStatus() {
   return request("/api/payments/status")
 }
+
+// ── Affiliates ────────────────────────────────────────────────────────────────
+
+function getAffiliateToken(): string | null {
+  if (typeof window === "undefined") return null
+  return localStorage.getItem("affiliate_token")
+}
+
+async function affiliateRequest(path: string, options: RequestInit = {}) {
+  const token = getAffiliateToken()
+  const res = await fetch(`${API}${path}`, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...options.headers,
+    },
+  })
+  const data = await res.json()
+  if (!res.ok) throw new Error(data.detail || "Something went wrong")
+  return data
+}
+
+export async function affiliateRegister(name: string, email: string, password: string, payout_email?: string) {
+  return request("/api/affiliates/register", {
+    method: "POST",
+    body: JSON.stringify({ name, email, password, payout_email }),
+  })
+}
+
+export async function affiliateLogin(email: string, password: string) {
+  const data = await request("/api/affiliates/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
+  })
+  localStorage.setItem("affiliate_token", data.token)
+  return data
+}
+
+export function affiliateLogout() {
+  localStorage.removeItem("affiliate_token")
+}
+
+export async function getAffiliateMe()        { return affiliateRequest("/api/affiliates/me") }
+export async function getAffiliateReferrals() { return affiliateRequest("/api/affiliates/referrals") }
+export async function getAffiliateEarnings()  { return affiliateRequest("/api/affiliates/earnings") }
+export async function updateAffiliatePayout(payout_email: string) {
+  return affiliateRequest("/api/affiliates/payout", {
+    method: "PUT",
+    body: JSON.stringify({ payout_email }),
+  })
+}
+
+// Admin affiliate endpoints
+export async function adminGetAllAffiliates()           { return request("/api/affiliates/admin/all") }
+export async function adminApproveAffiliate(id: string) { return request(`/api/affiliates/admin/${id}/approve`, { method: "POST" }) }
+export async function adminMarkAffiliatePaid(id: string){ return request(`/api/affiliates/admin/${id}/mark-paid`, { method: "POST" }) }
 
 // ── Admin ─────────────────────────────────────────────────────────────────────
 
