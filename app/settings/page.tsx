@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { getMe, getExchangeStatus, updateCapital, connectExchange, logout } from "@/lib/api"
+import { getMe, getExchangeStatus, updateCapital, connectExchange, logout, getBillingPortal } from "@/lib/api"
 
 export default function Settings() {
   const router = useRouter()
@@ -102,18 +102,56 @@ export default function Settings() {
       {/* Account info */}
       <div className="bg-white/5 rounded-2xl p-4 mb-4">
         <p className="text-gray-400 text-xs mb-3 uppercase tracking-wide">Account</p>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-4">
           <div>
             <p className="text-white font-medium">{user?.email}</p>
-            <p className="text-gray-400 text-sm capitalize">
-              {user?.subscription?.plan || "No plan"} · {user?.subscription?.status || "inactive"}
-            </p>
           </div>
-          <button onClick={handleLogout}
-            className="text-red-400 text-sm hover:text-red-300">
+          <button onClick={handleLogout} className="text-red-400 text-sm hover:text-red-300">
             Sign out
           </button>
         </div>
+
+        {/* Subscription status */}
+        {(() => {
+          const sub = user?.subscription
+          const status = sub?.status || "none"
+          const isActive = status === "active" || status === "trialing"
+
+          return (
+            <div className={`rounded-xl p-3 flex items-center justify-between ${
+              isActive ? "bg-green-500/10 border border-green-500/20" : "bg-white/5 border border-white/10"
+            }`}>
+              <div>
+                <p className={`text-sm font-semibold ${isActive ? "text-green-400" : "text-gray-400"}`}>
+                  {status === "trialing" ? "Free trial" :
+                   status === "active"   ? "Fortuna Pro" :
+                   status === "past_due" ? "Payment failed" :
+                   status === "cancelled" ? "Cancelled" : "No subscription"}
+                </p>
+                <p className="text-gray-500 text-xs mt-0.5">
+                  {status === "trialing" ? "Trial active — £49/mo after" :
+                   status === "active"   ? "£49/month" :
+                   status === "past_due" ? "Please update your payment method" :
+                   "Start your free 30-day trial"}
+                </p>
+              </div>
+              {isActive ? (
+                <button
+                  onClick={async () => {
+                    const { url } = await getBillingPortal()
+                    window.location.href = url
+                  }}
+                  className="text-brand text-sm hover:underline">
+                  Manage
+                </button>
+              ) : (
+                <a href="/subscribe" className="bg-brand hover:bg-brand-dark text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition">
+                  Subscribe
+                </a>
+              )}
+            </div>
+          )
+        })()}
       </div>
 
       {/* Trading capital */}

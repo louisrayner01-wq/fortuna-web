@@ -101,6 +101,20 @@ export async function getPnlChart() {
   return request("/api/trades/pnl-chart")
 }
 
+// ── Payments ──────────────────────────────────────────────────────────────────
+
+export async function createCheckout() {
+  return request("/api/payments/create-checkout", { method: "POST" })
+}
+
+export async function getBillingPortal() {
+  return request("/api/payments/portal")
+}
+
+export async function getPaymentStatus() {
+  return request("/api/payments/status")
+}
+
 // ── Admin ─────────────────────────────────────────────────────────────────────
 
 export async function getAdminStats() {
