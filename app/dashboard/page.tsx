@@ -5,14 +5,16 @@ import Link from "next/link"
 import Image from "next/image"
 import { getMe, getTradeSummary, getTrades, startBot, stopBot, updateCapital, logout } from "@/lib/api"
 
+const PRESETS = [100, 500, 1_000, 5_000, 10_000]
+
 export default function Dashboard() {
   const router  = useRouter()
   const [user, setUser]         = useState<any>(null)
   const [summary, setSummary]   = useState<any>(null)
   const [trades, setTrades]     = useState<any[]>([])
   const [capital, setCapital]   = useState("")
-  const [botCapital, setBotCapital] = useState(100)   // actual configured capital
-  const [viewCapital, setViewCapital] = useState<number | null>(null)  // simulated capital
+  const [botCapital, setBotCapital] = useState(100)
+  const [viewCapital, setViewCapital] = useState<number | null>(null)
   const [loading, setLoading]   = useState(true)
   const [toggling, setToggling] = useState(false)
   const [error, setError]       = useState("")
@@ -86,12 +88,11 @@ export default function Dashboard() {
     )
   }
 
-  const isActive  = user?.bot?.is_active
-  const simCap    = viewCapital ?? botCapital
-  const scale     = botCapital > 0 ? simCap / botCapital : 1
-  const pnl       = (summary?.total_pnl ?? 0) * scale
-
-  const PRESETS = [100, 500, 1000, 5000, 10000]
+  const isActive = user?.bot?.is_active
+  const simCap   = viewCapital ?? botCapital
+  const scale    = botCapital > 0 ? simCap / botCapital : 1
+  const pnl      = (summary?.total_pnl ?? 0) * scale
+  const isScaled = scale !== 1
 
   return (
     <main className="min-h-screen px-4 py-8 max-w-lg mx-auto">
@@ -108,32 +109,6 @@ export default function Dashboard() {
             Sign out
           </button>
         </div>
-      </div>
-
-      {/* Account size simulator */}
-      <div className="bg-white/5 rounded-2xl p-4 mb-4">
-        <p className="text-gray-400 text-xs mb-2">Simulate account size</p>
-        <div className="flex flex-wrap gap-2">
-          {PRESETS.map(p => (
-            <button
-              key={p}
-              onClick={() => setViewCapital(p === botCapital ? null : p)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
-                simCap === p
-                  ? "bg-brand text-white"
-                  : "bg-white/10 text-gray-300 hover:bg-white/15"
-              }`}
-            >
-              ${p >= 1000 ? `${p / 1000}k` : p}
-            </button>
-          ))}
-        </div>
-        {viewCapital && viewCapital !== botCapital && (
-          <p className="text-gray-500 text-xs mt-2">
-            Showing P&amp;L scaled to a ${viewCapital.toLocaleString()} account
-            (actual capital: ${botCapital.toLocaleString()})
-          </p>
-        )}
       </div>
 
       {/* Welcome message — shown once, dismissed to localStorage */}
@@ -207,27 +182,60 @@ export default function Dashboard() {
 
       {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
 
-      {/* P&L summary */}
-      <div className="grid grid-cols-3 gap-3 mb-4">
-        <div className="bg-white/5 rounded-2xl p-4">
-          <p className="text-gray-400 text-xs mb-1">Total P&L</p>
-          <p className={`text-lg font-bold ${pnl >= 0 ? "text-green-400" : "text-red-400"}`}>
-            {pnl >= 0 ? "+" : ""}${pnl.toFixed(2)}
+      {/* Paper account size + P&L summary */}
+      <div className="bg-white/5 rounded-2xl p-4 mb-4">
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-gray-400 text-xs uppercase tracking-wide">Paper Account Size</p>
+          {isScaled && (
+            <span className="text-xs text-brand font-semibold">
+              Scaled to ${simCap.toLocaleString()}
+            </span>
+          )}
+        </div>
+        <div className="flex gap-2 mb-4">
+          {PRESETS.map(p => (
+            <button
+              key={p}
+              onClick={() => setViewCapital(p === botCapital && !viewCapital ? null : p)}
+              className={`flex-1 py-2 rounded-xl text-xs font-bold transition ${
+                simCap === p
+                  ? "bg-brand text-white"
+                  : "bg-white/10 text-gray-300 hover:bg-white/20"
+              }`}
+            >
+              ${p >= 1000 ? `${p / 1000}k` : p}
+            </button>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-3 gap-3">
+          <div className={`rounded-xl p-3 ${isScaled ? "bg-brand/10 border border-brand/20" : "bg-white/5"}`}>
+            <p className="text-gray-400 text-xs mb-1">Total P&amp;L</p>
+            <p className={`text-lg font-bold ${pnl >= 0 ? "text-green-400" : "text-red-400"}`}>
+              {pnl >= 0 ? "+" : ""}${pnl.toFixed(2)}
+            </p>
+          </div>
+          <div className="bg-white/5 rounded-xl p-3">
+            <p className="text-gray-400 text-xs mb-1">Trades</p>
+            <p className="text-lg font-bold text-white">{summary?.total_trades ?? 0}</p>
+          </div>
+          <div className="bg-white/5 rounded-xl p-3">
+            <p className="text-gray-400 text-xs mb-1">Win Rate</p>
+            <p className="text-lg font-bold text-white">{summary?.win_rate ?? 0}%</p>
+          </div>
+        </div>
+
+        {isScaled && (
+          <p className="text-gray-500 text-xs mt-3">
+            Actual bot capital: ${botCapital.toLocaleString()} — figures above are scaled proportionally.
+            <button onClick={() => setViewCapital(null)} className="text-brand ml-2 hover:underline">Reset</button>
           </p>
-        </div>
-        <div className="bg-white/5 rounded-2xl p-4">
-          <p className="text-gray-400 text-xs mb-1">Trades</p>
-          <p className="text-lg font-bold text-white">{summary?.total_trades ?? 0}</p>
-        </div>
-        <div className="bg-white/5 rounded-2xl p-4">
-          <p className="text-gray-400 text-xs mb-1">Win Rate</p>
-          <p className="text-lg font-bold text-white">{summary?.win_rate ?? 0}%</p>
-        </div>
+        )}
       </div>
 
       {/* Capital setting */}
       <div className="bg-white/5 rounded-2xl p-4 mb-4">
-        <p className="text-gray-400 text-sm mb-3">Trading Capital ($)</p>
+        <p className="text-gray-400 text-xs uppercase tracking-wide mb-3">Set Bot Capital ($)</p>
         <div className="flex gap-2">
           <input
             type="number" min="10" value={capital}
@@ -239,11 +247,15 @@ export default function Dashboard() {
             Save
           </button>
         </div>
+        <p className="text-gray-500 text-xs mt-2">This changes what the bot actually trades with. Use the buttons above just to preview P&L at different sizes.</p>
       </div>
 
       {/* Recent trades */}
       <div className="bg-white/5 rounded-2xl p-4">
-        <p className="text-gray-400 text-sm mb-3">Recent Trades</p>
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-gray-400 text-sm">Recent Trades</p>
+          {isScaled && <p className="text-xs text-brand">scaled to ${simCap.toLocaleString()}</p>}
+        </div>
         {trades.length === 0 ? (
           <p className="text-gray-500 text-sm text-center py-4">No trades yet</p>
         ) : (
