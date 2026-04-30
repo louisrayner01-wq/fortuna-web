@@ -117,7 +117,7 @@ export default function Landing() {
             Sign in
           </Link>
           <Link href="/register"
-            className="bg-brand hover:bg-brand-dark text-white text-sm font-semibold px-4 py-2 rounded-lg transition">
+            className="bg-brand hover:bg-brand-dark text-black text-sm font-semibold px-4 py-2 rounded-lg transition">
             Get Started
           </Link>
         </div>
@@ -142,7 +142,7 @@ export default function Landing() {
 
         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
           <Link href="/register"
-            className="bg-brand hover:bg-brand-dark text-white font-semibold px-8 py-4 rounded-xl text-center transition text-lg">
+            className="bg-brand hover:bg-brand-dark text-black font-semibold px-8 py-4 rounded-xl text-center transition text-lg">
             Start free trial — 30 days free
           </Link>
           <Link href={TELEGRAM} target="_blank"
@@ -247,7 +247,7 @@ export default function Landing() {
           </ul>
 
           <Link href="/register"
-            className="block w-full bg-brand hover:bg-brand-dark text-white font-semibold py-4 rounded-xl transition text-center text-lg">
+            className="block w-full bg-brand hover:bg-brand-dark text-black font-semibold py-4 rounded-xl transition text-center text-lg">
             Start free trial
           </Link>
           <p className="text-gray-500 text-xs mt-4">
@@ -291,7 +291,7 @@ export default function Landing() {
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/register"
-              className="bg-brand hover:bg-brand-dark text-white font-semibold px-8 py-4 rounded-xl transition text-center">
+              className="bg-brand hover:bg-brand-dark text-black font-semibold px-8 py-4 rounded-xl transition text-center">
               Start free trial
             </Link>
             <Link href={TELEGRAM} target="_blank"

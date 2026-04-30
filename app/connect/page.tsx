@@ -83,7 +83,7 @@ export default function Connect() {
           {error && <p className="text-red-400 text-sm">{error}</p>}
 
           <button type="submit" disabled={loading}
-            className="bg-brand hover:bg-brand-dark text-white font-semibold py-3 rounded-xl transition disabled:opacity-50">
+            className="bg-brand hover:bg-brand-dark text-black font-semibold py-3 rounded-xl transition disabled:opacity-50">
             {loading ? "Verifying keys..." : "Connect Exchange"}
           </button>
         </form>

@@ -62,7 +62,7 @@ export default function Subscribe() {
           <button
             onClick={handleSubscribe}
             disabled={loading}
-            className="w-full bg-brand hover:bg-brand-dark text-white font-semibold py-3 rounded-xl transition disabled:opacity-50"
+            className="w-full bg-brand hover:bg-brand-dark text-black font-semibold py-3 rounded-xl transition disabled:opacity-50"
           >
             {loading ? "Redirecting to payment..." : "Start free trial"}
           </button>

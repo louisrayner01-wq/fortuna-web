@@ -68,7 +68,7 @@ function RegisterForm() {
         />
         {error && <p className="text-red-400 text-sm">{error}</p>}
         <button type="submit" disabled={loading}
-          className="bg-brand hover:bg-brand-dark text-white font-semibold py-3 rounded-xl transition disabled:opacity-50">
+          className="bg-brand hover:bg-brand-dark text-black font-semibold py-3 rounded-xl transition disabled:opacity-50">
           {loading ? "Creating account..." : "Create Account"}
         </button>
       </form>

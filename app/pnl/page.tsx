@@ -134,7 +134,7 @@ export default function PnlPage() {
               onClick={() => setViewCapital(p === botCapital ? null : p)}
               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition ${
                 simCap === p
-                  ? "bg-brand text-white"
+                  ? "bg-brand text-black"
                   : "bg-white/10 text-gray-300 hover:bg-white/15"
               }`}
             >

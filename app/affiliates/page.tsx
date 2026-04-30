@@ -74,7 +74,7 @@ export default function AffiliateLanding() {
             ["Earn commission", "Every subscriber you refer pays you 20% of their monthly fee, every month they stay."],
           ].map(([title, body], i) => (
             <li key={i} className="flex gap-3">
-              <span className="w-5 h-5 rounded-full bg-brand text-white text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
+              <span className="w-5 h-5 rounded-full bg-brand text-black text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
               <span className="text-sm text-gray-300"><span className="text-white font-semibold">{title} — </span>{body}</span>
             </li>
           ))}
@@ -85,13 +85,13 @@ export default function AffiliateLanding() {
       <div className="flex gap-2 mb-6">
         <button
           onClick={() => setTab("info")}
-          className={`flex-1 py-2 rounded-xl text-sm font-semibold transition ${tab === "info" ? "bg-brand text-white" : "bg-white/10 text-gray-400 hover:text-white"}`}
+          className={`flex-1 py-2 rounded-xl text-sm font-semibold transition ${tab === "info" ? "bg-brand text-black" : "bg-white/10 text-gray-400 hover:text-white"}`}
         >
           Learn more
         </button>
         <button
           onClick={() => setTab("apply")}
-          className={`flex-1 py-2 rounded-xl text-sm font-semibold transition ${tab === "apply" ? "bg-brand text-white" : "bg-white/10 text-gray-400 hover:text-white"}`}
+          className={`flex-1 py-2 rounded-xl text-sm font-semibold transition ${tab === "apply" ? "bg-brand text-black" : "bg-white/10 text-gray-400 hover:text-white"}`}
         >
           Apply now
         </button>
@@ -115,7 +115,7 @@ export default function AffiliateLanding() {
           </div>
           <button
             onClick={() => setTab("apply")}
-            className="mt-6 w-full bg-brand hover:bg-brand-dark text-white font-semibold py-3 rounded-xl transition text-sm"
+            className="mt-6 w-full bg-brand hover:bg-brand-dark text-black font-semibold py-3 rounded-xl transition text-sm"
           >
             Apply to become an affiliate
           </button>
@@ -170,7 +170,7 @@ export default function AffiliateLanding() {
               {error && <p className="text-red-400 text-sm">{error}</p>}
               <button
                 type="submit" disabled={loading}
-                className="bg-brand hover:bg-brand-dark text-white font-semibold py-3 rounded-xl transition disabled:opacity-50"
+                className="bg-brand hover:bg-brand-dark text-black font-semibold py-3 rounded-xl transition disabled:opacity-50"
               >
                 {loading ? "Submitting…" : "Submit application"}
               </button>

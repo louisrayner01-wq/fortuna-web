@@ -86,7 +86,7 @@ export default function AffiliateDashboard() {
           <p className="text-white text-sm font-mono flex-1 truncate">{me?.link}</p>
           <button
             onClick={copyLink}
-            className="bg-brand hover:bg-brand-dark text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition shrink-0"
+            className="bg-brand hover:bg-brand-dark text-black text-xs font-semibold px-3 py-1.5 rounded-lg transition shrink-0"
           >
             {copied ? "Copied!" : "Copy"}
           </button>
@@ -114,7 +114,7 @@ export default function AffiliateDashboard() {
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`flex-1 py-2 rounded-xl text-sm font-semibold capitalize transition ${tab === t ? "bg-brand text-white" : "bg-white/10 text-gray-400 hover:text-white"}`}
+            className={`flex-1 py-2 rounded-xl text-sm font-semibold capitalize transition ${tab === t ? "bg-brand text-black" : "bg-white/10 text-gray-400 hover:text-white"}`}
           >
             {t} {t === "referrals" ? `(${referrals.length})` : `(${earnings.length})`}
           </button>
@@ -184,7 +184,7 @@ export default function AffiliateDashboard() {
             placeholder="paypal@example.com"
             className="flex-1 bg-white/10 text-white placeholder-gray-500 rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-brand text-sm"
           />
-          <button type="submit" className="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-sm font-semibold transition">
+          <button type="submit" className="bg-brand hover:bg-brand-dark text-black px-4 py-2 rounded-xl text-sm font-semibold transition">
             Save
           </button>
         </form>

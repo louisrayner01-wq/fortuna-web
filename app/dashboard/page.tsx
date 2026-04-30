@@ -159,7 +159,7 @@ export default function Dashboard() {
             className={`px-5 py-2 rounded-xl font-semibold text-sm transition disabled:opacity-50 ${
               isActive
                 ? "bg-red-500/20 text-red-400 hover:bg-red-500/30"
-                : "bg-brand text-white hover:bg-brand-dark"
+                : "bg-brand text-black hover:bg-brand-dark"
             }`}>
             {toggling ? "..." : isActive ? "Stop" : "Start"}
           </button>
@@ -199,7 +199,7 @@ export default function Dashboard() {
               onClick={() => setViewCapital(p === botCapital && !viewCapital ? null : p)}
               className={`flex-1 py-2 rounded-xl text-xs font-bold transition ${
                 simCap === p
-                  ? "bg-brand text-white"
+                  ? "bg-brand text-black"
                   : "bg-white/10 text-gray-300 hover:bg-white/20"
               }`}
             >
@@ -243,7 +243,7 @@ export default function Dashboard() {
             className="flex-1 bg-white/10 text-white rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-brand"
           />
           <button onClick={saveCapital}
-            className="bg-brand hover:bg-brand-dark text-white px-4 py-2 rounded-xl text-sm font-semibold transition">
+            className="bg-brand hover:bg-brand-dark text-black px-4 py-2 rounded-xl text-sm font-semibold transition">
             Save
           </button>
         </div>

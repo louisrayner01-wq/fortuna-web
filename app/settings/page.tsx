@@ -145,7 +145,7 @@ export default function Settings() {
                   Manage
                 </button>
               ) : (
-                <a href="/subscribe" className="bg-brand hover:bg-brand-dark text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition">
+                <a href="/subscribe" className="bg-brand hover:bg-brand-dark text-black text-xs font-semibold px-3 py-1.5 rounded-lg transition">
                   Subscribe
                 </a>
               )}
@@ -175,7 +175,7 @@ export default function Settings() {
             </p>
           )}
           <button type="submit" disabled={capitalSaving}
-            className="bg-brand hover:bg-brand-dark text-white font-semibold py-3 rounded-xl transition disabled:opacity-50">
+            className="bg-brand hover:bg-brand-dark text-black font-semibold py-3 rounded-xl transition disabled:opacity-50">
             {capitalSaving ? "Saving..." : "Save Capital"}
           </button>
         </form>
@@ -228,7 +228,7 @@ export default function Settings() {
               </p>
             )}
             <button type="submit" disabled={keySaving}
-              className="bg-brand hover:bg-brand-dark text-white font-semibold py-3 rounded-xl transition disabled:opacity-50">
+              className="bg-brand hover:bg-brand-dark text-black font-semibold py-3 rounded-xl transition disabled:opacity-50">
               {keySaving ? "Verifying..." : "Save Keys"}
             </button>
           </form>
