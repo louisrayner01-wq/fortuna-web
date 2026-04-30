@@ -97,20 +97,35 @@ const faqs = [
 ]
 
 export default function Landing() {
-  const [openFaq, setOpenFaq]     = useState<number | null>(null)
-  const [showIntro, setShowIntro] = useState(true)
+  const [openFaq, setOpenFaq]       = useState<number | null>(null)
+  const [showIntro, setShowIntro]   = useState(true)
+  const [pageVisible, setPageVisible] = useState(false)
 
   useEffect(() => {
     if (sessionStorage.getItem("fortuna_intro")) {
       setShowIntro(false)
+      setPageVisible(true)
     } else {
       sessionStorage.setItem("fortuna_intro", "1")
     }
   }, [])
 
+  function handleIntroComplete() {
+    setShowIntro(false)
+    // small delay so the intro overlay finishes fading before page snaps in
+    setTimeout(() => setPageVisible(true), 100)
+  }
+
   return (
-    <main className="min-h-screen text-white" style={{ background: "#0a0a0a" }}>
-      {showIntro && <IntroAnimation onComplete={() => setShowIntro(false)} />}
+    <main
+      className="min-h-screen text-white"
+      style={{
+        background: "#0a0a0a",
+        opacity:    pageVisible ? 1 : 0,
+        transition: pageVisible ? "opacity 0.8s ease-out" : "none",
+      }}
+    >
+      {showIntro && <IntroAnimation onComplete={handleIntroComplete} />}
 
       {/* ── Nav ── */}
       <nav className="flex items-center justify-between px-6 py-4 max-w-6xl mx-auto">

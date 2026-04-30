@@ -1,83 +1,109 @@
 "use client"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
 
-// SVG geometry constants — wheel center is at (50%, 40%) of the 500×520 viewBox
-// Wheel outer radius = 90/500 = 18% of width → diameter 36%
-const WHEEL_CENTER_X = "50%"
-const WHEEL_CENTER_Y = "40%"
-const IRIS_SIZE      = "37%"   // slightly overshoots wheel edge
+// Wheel centre in the SVG viewBox (500 × 520):
+//   cx = 250 → 50%,  cy = 208 → 40%
+const CX = 50
+const CY = 40
 
 type Phase = "hold" | "iris" | "zoom" | "fade" | "done"
 
 export default function IntroAnimation({ onComplete }: { onComplete: () => void }) {
   const [phase, setPhase] = useState<Phase>("hold")
+  const overlayRef        = useRef<HTMLDivElement>(null)
+  const rafRef            = useRef<number | null>(null)
 
+  // ── Timing ────────────────────────────────────────────────────────────────
   useEffect(() => {
-    const t1 = setTimeout(() => setPhase("iris"),  700)   // pause, then open iris
-    const t2 = setTimeout(() => setPhase("zoom"),  1600)  // iris open → fly through
-    const t3 = setTimeout(() => setPhase("fade"),  2900)  // start fading overlay
-    const t4 = setTimeout(() => { setPhase("done"); onComplete() }, 3400)
+    const t1 = setTimeout(() => setPhase("iris"),  900)   // hold → open iris
+    const t2 = setTimeout(() => setPhase("zoom"),  2000)  // iris done → fly through
+    const t3 = setTimeout(() => setPhase("fade"),  3100)  // start fade
+    const t4 = setTimeout(() => { setPhase("done"); onComplete() }, 4000)
     return () => [t1, t2, t3, t4].forEach(clearTimeout)
   }, [onComplete])
+
+  // ── Iris: punch a growing hole through the overlay via CSS mask ───────────
+  useEffect(() => {
+    if (phase !== "iris") return
+
+    const duration = 1000 // ms
+    let startTime: number | null = null
+
+    const tick = (now: number) => {
+      if (!startTime) startTime = now
+      const raw = Math.min((now - startTime) / duration, 1)
+      // cubic ease-in-out
+      const t   = raw < 0.5 ? 4 * raw ** 3 : 1 - (-2 * raw + 2) ** 3 / 2
+      const r   = t * 120  // grow to 120% so it fully covers the screen
+
+      if (overlayRef.current) {
+        // Transparent hole at wheel centre; black everywhere else
+        const mask = `radial-gradient(circle at ${CX}% ${CY}%, transparent ${r}%, #0a0a0a ${r + 2}%)`
+        overlayRef.current.style.maskImage        = mask
+        overlayRef.current.style.webkitMaskImage  = mask
+      }
+
+      if (raw < 1) rafRef.current = requestAnimationFrame(tick)
+    }
+
+    rafRef.current = requestAnimationFrame(tick)
+    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current) }
+  }, [phase])
 
   if (phase === "done") return null
 
   return (
-    <div
-      style={{
-        position:       "fixed",
-        inset:          0,
-        zIndex:         9999,
-        background:     "#0a0a0a",
-        display:        "flex",
-        alignItems:     "center",
-        justifyContent: "center",
-        overflow:       "hidden",
-        opacity:        phase === "fade" ? 0 : 1,
-        transition:     phase === "fade" ? "opacity 0.5s ease-out" : "none",
-        pointerEvents:  phase === "fade" ? "none" : "auto",
-      }}
-    >
-      {/* Logo — scales up with transform-origin at wheel centre to simulate fly-through */}
+    <>
+      {/* ── Dark overlay — the "door" that gets punched open ── */}
+      <div
+        ref={overlayRef}
+        style={{
+          position:      "fixed",
+          inset:         0,
+          zIndex:        9998,
+          background:    "#0a0a0a",
+          opacity:       phase === "fade" ? 0 : 1,
+          transition:    phase === "fade" ? "opacity 0.9s ease-out" : "none",
+          pointerEvents: phase === "fade" ? "none" : "auto",
+        }}
+      />
+
+      {/* ── Logo — always on top, flies through the hole during zoom ── */}
       <div
         style={{
-          position:        "relative",
-          width:           "min(72vw, 72vh)",
-          height:          "min(72vw, 72vh)",
-          transformOrigin: `${WHEEL_CENTER_X} ${WHEEL_CENTER_Y}`,
-          transform:       phase === "zoom" ? "scale(22)" : "scale(1)",
-          transition:      phase === "zoom"
-            ? "transform 1.3s cubic-bezier(0.55, 0, 1, 1)"
-            : "none",
+          position:       "fixed",
+          inset:          0,
+          zIndex:         9999,
+          display:        "flex",
+          alignItems:     "center",
+          justifyContent: "center",
+          pointerEvents:  "none",
+          opacity:        phase === "fade" ? 0 : 1,
+          transition:     phase === "fade" ? "opacity 0.9s ease-out" : "none",
         }}
       >
-        <Image
-          src="/logo.svg"
-          alt="Fortuna"
-          fill
-          style={{ objectFit: "contain" }}
-          priority
-        />
-
-        {/* Iris — dark disc that sits over the wheel and shrinks away to "open the door" */}
         <div
           style={{
-            position:     "absolute",
-            left:         WHEEL_CENTER_X,
-            top:          WHEEL_CENTER_Y,
-            width:        IRIS_SIZE,
-            aspectRatio:  "1 / 1",
-            borderRadius: "50%",
-            background:   "#0a0a0a",
-            transform:    `translate(-50%, -50%) scale(${phase === "hold" ? 1.3 : 0})`,
-            transition:   phase === "iris"
-              ? "transform 0.9s cubic-bezier(0.4, 0, 0.2, 1)"
+            position:        "relative",
+            width:           "min(70vw, 70vh)",
+            height:          "min(70vw, 70vh)",
+            transformOrigin: `${CX}% ${CY}%`,
+            transform:       phase === "zoom" ? "scale(20)" : "scale(1)",
+            transition:      phase === "zoom"
+              ? "transform 1.1s cubic-bezier(0.4, 0, 1, 1)"
               : "none",
-            zIndex:       1,
           }}
-        />
+        >
+          <Image
+            src="/logo.svg"
+            alt="Fortuna"
+            fill
+            style={{ objectFit: "contain" }}
+            priority
+          />
+        </div>
       </div>
-    </div>
+    </>
   )
 }
