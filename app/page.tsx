@@ -117,15 +117,17 @@ export default function Landing() {
   }
 
   return (
-    <main
-      className="min-h-screen text-white"
-      style={{
-        background: "#0a0a0a",
-        opacity:    pageVisible ? 1 : 0,
-        transition: pageVisible ? "opacity 0.8s ease-out" : "none",
-      }}
-    >
+    <>
       {showIntro && <IntroAnimation onComplete={handleIntroComplete} />}
+
+      <main
+        className="min-h-screen text-white"
+        style={{
+          background: "#0a0a0a",
+          opacity:    pageVisible ? 1 : 0,
+          transition: pageVisible ? "opacity 0.8s ease-out" : "none",
+        }}
+      >
 
       {/* ── Nav ── */}
       <nav className="flex items-center justify-between px-6 py-4 max-w-6xl mx-auto">
@@ -345,5 +347,6 @@ export default function Landing() {
       </footer>
 
     </main>
+    </>
   )
 }
