@@ -1,7 +1,8 @@
 "use client"
 import Link from "next/link"
 import Image from "next/image"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import IntroAnimation from "./components/IntroAnimation"
 
 const TELEGRAM = "https://t.me/+POGmexl_VjpkOTdk"
 
@@ -96,10 +97,20 @@ const faqs = [
 ]
 
 export default function Landing() {
-  const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const [openFaq, setOpenFaq]     = useState<number | null>(null)
+  const [showIntro, setShowIntro] = useState(true)
+
+  useEffect(() => {
+    if (sessionStorage.getItem("fortuna_intro")) {
+      setShowIntro(false)
+    } else {
+      sessionStorage.setItem("fortuna_intro", "1")
+    }
+  }, [])
 
   return (
     <main className="min-h-screen text-white" style={{ background: "#0a0a0a" }}>
+      {showIntro && <IntroAnimation onComplete={() => setShowIntro(false)} />}
 
       {/* ── Nav ── */}
       <nav className="flex items-center justify-between px-6 py-4 max-w-6xl mx-auto">
