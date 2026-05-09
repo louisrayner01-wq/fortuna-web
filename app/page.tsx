@@ -134,6 +134,10 @@ export default function Landing() {
             className="text-gray-400 hover:text-white text-sm transition hidden sm:block">
             Sign in
           </Link>
+          <Link href="/affiliates"
+            className="text-gray-400 hover:text-white text-sm transition hidden sm:block">
+            Become a Partner
+          </Link>
           <Link href="/register"
             className="bg-brand hover:bg-brand-dark text-black text-sm font-semibold px-4 py-2 rounded-lg transition">
             Get Started
@@ -316,6 +320,39 @@ export default function Landing() {
               className="bg-white/10 hover:bg-white/20 text-white font-semibold px-8 py-4 rounded-xl transition text-center">
               Join the Telegram
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Partner programme ── */}
+      <section className="px-6 pb-24 max-w-4xl mx-auto">
+        <div className="bg-white/[0.03] border border-white/10 rounded-3xl p-10 flex flex-col sm:flex-row items-center justify-between gap-8">
+          <div className="flex-1">
+            <p className="text-brand text-sm font-semibold uppercase tracking-widest mb-3">Partner Programme</p>
+            <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">Earn £24.50 per referral, every month</h2>
+            <p className="text-gray-400 text-sm leading-relaxed max-w-md">
+              Share your unique link. Every subscriber you refer earns you 50% of their monthly fee for the lifetime of their subscription — tracked automatically, paid monthly.
+            </p>
+            <ul className="flex flex-col gap-2 mt-5">
+              {[
+                "50% commission — £24.50 per subscriber per month",
+                "Your own custom referral code",
+                "Real-time dashboard to track referrals and earnings",
+                "Paid monthly via PayPal or bank transfer",
+              ].map(item => (
+                <li key={item} className="flex items-center gap-2 text-sm text-gray-300">
+                  <span className="text-brand">✓</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="shrink-0">
+            <Link href="/affiliates"
+              className="block bg-brand hover:bg-brand-dark text-black font-semibold px-8 py-4 rounded-xl transition text-center whitespace-nowrap">
+              Become a Partner
+            </Link>
+            <p className="text-gray-600 text-xs text-center mt-3">Free to join. No minimum.</p>
           </div>
         </div>
       </section>
