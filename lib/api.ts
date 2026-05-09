@@ -53,6 +53,20 @@ export async function getMe() {
   return request("/api/users/me")
 }
 
+export async function forgotPassword(email: string) {
+  return request("/api/users/forgot-password", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  })
+}
+
+export async function resetPassword(token: string, password: string) {
+  return request("/api/users/reset-password", {
+    method: "POST",
+    body: JSON.stringify({ token, password }),
+  })
+}
+
 // ── Bot ───────────────────────────────────────────────────────────────────────
 
 export async function startBot() {

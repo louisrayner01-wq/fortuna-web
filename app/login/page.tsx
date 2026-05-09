@@ -49,6 +49,9 @@ export default function Login() {
             className="bg-brand hover:bg-brand-dark text-black font-semibold py-3 rounded-xl transition disabled:opacity-50">
             {loading ? "Signing in..." : "Sign In"}
           </button>
+          <Link href="/forgot-password" className="text-gray-500 text-sm text-center hover:text-gray-300">
+            Forgot password?
+          </Link>
         </form>
 
         <p className="text-gray-400 text-sm text-center mt-6">
