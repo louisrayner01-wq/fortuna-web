@@ -11,6 +11,7 @@ export default function AffiliateLanding() {
   const [name, setName]         = useState("")
   const [email, setEmail]       = useState("")
   const [password, setPassword] = useState("")
+  const [code, setCode]         = useState("")
   const [payout, setPayout]     = useState("")
   const [loading, setLoading]   = useState(false)
   const [error, setError]       = useState("")
@@ -21,7 +22,7 @@ export default function AffiliateLanding() {
     setError("")
     setLoading(true)
     try {
-      await affiliateRegister(name, email, password, payout)
+      await affiliateRegister(name, email, password, code.trim().toUpperCase() || undefined, payout)
       setDone(true)
     } catch (err: any) {
       setError(err.message)
@@ -52,7 +53,7 @@ export default function AffiliateLanding() {
       {/* Stats row */}
       <div className="grid grid-cols-3 gap-3 mb-8">
         {[
-          ["20%", "Commission per payment"],
+          ["50%", "Commission per payment"],
           ["Monthly", "Recurring income"],
           ["Real-time", "Earnings tracking"],
         ].map(([val, label]) => (
@@ -71,7 +72,7 @@ export default function AffiliateLanding() {
             ["Apply below", "Fill in your details and submit your application."],
             ["Get approved", "We'll review and activate your account, usually within 24 hours."],
             ["Share your link", "You get a unique link like fortuna.app/register?ref=YOURCODE"],
-            ["Earn commission", "Every subscriber you refer pays you 20% of their monthly fee, every month they stay."],
+            ["Earn commission", "Every subscriber you refer pays you 50% of their monthly fee, every month they stay."],
           ].map(([title, body], i) => (
             <li key={i} className="flex gap-3">
               <span className="w-5 h-5 rounded-full bg-brand text-black text-xs font-bold flex items-center justify-center shrink-0 mt-0.5">{i + 1}</span>
@@ -103,6 +104,7 @@ export default function AffiliateLanding() {
           <div className="flex flex-col gap-4">
             {[
               ["Who can apply?", "Anyone — influencers, content creators, trading communities, or anyone with an audience interested in automated trading."],
+              ["How much do I earn?", "50% of every payment your referrals make — that's £24.50 per subscriber per month, for as long as they stay subscribed."],
               ["When do I get paid?", "We pay out monthly via PayPal or bank transfer. You'll see a full breakdown in your affiliate dashboard."],
               ["Is there a minimum payout?", "£20 minimum. Anything below rolls over to the next month."],
               ["How long do referrals last?", "Forever. Once someone signs up through your link, they're attributed to you for the lifetime of their subscription."],
@@ -142,6 +144,16 @@ export default function AffiliateLanding() {
                   placeholder="Your name"
                   className="w-full bg-white/10 text-white placeholder-gray-500 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand"
                 />
+              </div>
+              <div>
+                <label className="text-gray-400 text-xs mb-1.5 block">Your referral code <span className="text-gray-600">(choose your own — e.g. JOHN50)</span></label>
+                <input
+                  value={code} onChange={e => setCode(e.target.value.toUpperCase().replace(/[^A-Z0-9\-_]/g, ""))}
+                  placeholder="e.g. JOHN50"
+                  maxLength={20}
+                  className="w-full bg-white/10 text-white placeholder-gray-500 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand font-mono"
+                />
+                <p className="text-gray-600 text-xs mt-1">Letters and numbers only, 3–20 characters. Leave blank to auto-generate.</p>
               </div>
               <div>
                 <label className="text-gray-400 text-xs mb-1.5 block">Email</label>

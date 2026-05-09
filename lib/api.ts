@@ -137,10 +137,10 @@ async function affiliateRequest(path: string, options: RequestInit = {}) {
   return data
 }
 
-export async function affiliateRegister(name: string, email: string, password: string, payout_email?: string) {
+export async function affiliateRegister(name: string, email: string, password: string, code?: string, payout_email?: string) {
   return request("/api/affiliates/register", {
     method: "POST",
-    body: JSON.stringify({ name, email, password, payout_email }),
+    body: JSON.stringify({ name, email, password, code, payout_email }),
   })
 }
 

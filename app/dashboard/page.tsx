@@ -104,6 +104,9 @@ export default function Dashboard() {
           <Link href="/pnl" className="text-sm font-semibold bg-white/10 hover:bg-white/15 text-white px-3 py-1.5 rounded-lg transition">
             P&amp;L
           </Link>
+          <Link href="/affiliates" className="text-sm font-semibold bg-white/10 hover:bg-white/15 text-white px-3 py-1.5 rounded-lg transition">
+            Partners
+          </Link>
           <Link href="/settings" className="text-gray-400 text-sm hover:text-white">Settings</Link>
           <button onClick={handleLogout} className="text-gray-400 text-sm hover:text-white">
             Sign out
